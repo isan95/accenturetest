@@ -13,5 +13,5 @@ public interface OrderService {
     
     void delete(Order order);
     
-    boolean validateProductsExistence(OrderRequest product);
+    Order updateOrder(Order order);
 }

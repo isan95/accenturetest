@@ -55,7 +55,9 @@ public class Order {
 	@Valid
 	private List<OrderProduct> orderProducts = new ArrayList<>();
 	
-	private final double iva = 19/100;
+	private final double ivaPercent = 19.0/100.0;
+	
+	private double iva;
 	
 	private final double shipping = 8000.0;
 	

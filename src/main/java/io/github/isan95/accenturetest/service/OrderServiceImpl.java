@@ -14,46 +14,56 @@ import io.github.isan95.accenturetest.repository.ProductRepository;
 
 @Service
 @Transactional
-public class OrderServiceImpl implements OrderService{
-	
+public class OrderServiceImpl implements OrderService {
+
 	@Autowired
 	private OrderRepository orderRepository;
-	
-	@Autowired 
+
+	@Autowired
 	private ProductRepository productRepository;
 
 	@Override
 	public Iterable<Order> getAllOrders() {
-		
+
 		return orderRepository.findAll();
 	}
 
 	@Override
 	public Order create(Order order) {
-		
+
 		return orderRepository.save(order);
 	}
 
 	@Override
 	public void update(Order order) {
-		
+
 		orderRepository.save(order);
 	}
 
 	@Override
 	public void delete(Order order) {
-		
+
 		orderRepository.delete(order);
 	}
 
 	@Override
-	public boolean validateProductsExistence(OrderRequest productRequest) {
-		Product product = productRepository.findById(productRequest.getIdProduct())
-				.orElseThrow(()-> new ResourceNotFoundException("Product not found"));;
-		
-		if(product.getStock()>=productRequest.getQuantity())
-			return true;
-		return false;
+	public Order updateOrder(Order order) {
+		if (order.getSubtotal() > 70000) {
+			order.setIva(order.getSubtotal() * order.getIvaPercent());
+			order.setTotal(order.getSubtotal() + order.getIva() + order.getShipping());
+			this.update(order);
+			return order;
+		}
+		if(order.getSubtotal()>100000) {
+			order.setIva(order.getSubtotal() * order.getIvaPercent());
+			order.setTotal(order.getSubtotal() + order.getIva());
+			this.update(order);
+			return order;
+		}
+		else {
+			return null;
+		}
+
 	}
 
 }

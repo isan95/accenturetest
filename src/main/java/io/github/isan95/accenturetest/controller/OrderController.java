@@ -22,6 +22,7 @@ import io.github.isan95.accenturetest.entity.Product;
 import io.github.isan95.accenturetest.entity.UserApp;
 import io.github.isan95.accenturetest.filter.UserSesion;
 import io.github.isan95.accenturetest.payload.request.OrderRequest;
+import io.github.isan95.accenturetest.payload.response.MessageResponse;
 import io.github.isan95.accenturetest.service.OrderProductServiceImpl;
 import io.github.isan95.accenturetest.service.OrderServiceImpl;
 import io.github.isan95.accenturetest.service.OrderStatusServiceImpl;
@@ -70,10 +71,15 @@ public class OrderController {
 	    order.setOrderProducts(orderProducts);
 	    order.setStatus(orderStatusService.findById(1));
 	    order.setSubtotal(order.getSubTotalOrderPrice());
-	    order.setTotal(order.getSubtotal()+(order.getSubtotal()*order.getIva())+order.getShipping());
-	    this.orderService.update(order);
+	  
+	    if(orderService.updateOrder(order) != null) {
+	    	return new ResponseEntity<>(order,HttpStatus.CREATED);
+	    }
+	    else {
+	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Erro: Compra por menos de $70.000"));
+	    }
 		
-	    return new ResponseEntity<>(order,HttpStatus.CREATED);
+	    
 		
 	}
 }
