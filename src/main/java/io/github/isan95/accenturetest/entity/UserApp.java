@@ -15,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.github.isan95.accenturetest.entity.Role;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +41,7 @@ public class UserApp {
 	
 	private String address;
 	
+	@JsonIgnore
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

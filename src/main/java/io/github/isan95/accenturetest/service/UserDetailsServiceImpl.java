@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.github.isan95.accenture.exception.ResourceNotFoundException;
 import io.github.isan95.accenturetest.entity.UserApp;
 import io.github.isan95.accenturetest.repository.UserRepository;
 
@@ -28,8 +29,14 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	
 	public UserApp findUserByNDoc(String nDoc) throws UsernameNotFoundException {
 		
-		UserApp user = (userRepository.findByUsername(nDoc).isPresent()) ? userRepository.findByUsername(nDoc).get() : null;
+		UserApp user = userRepository.findByUsername(nDoc)
+				.orElseThrow(()-> new UsernameNotFoundException("Cliento no encontrado con documento: "+ nDoc));
 		return user;
+	}
+	
+	public UserApp findById(Long id) {
+		
+		return userRepository.findById(id).orElseThrow(()->new ResourceNotFoundException ("Usuario no encontrado")); 
 	}
 	
 }

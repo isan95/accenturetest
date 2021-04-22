@@ -4,31 +4,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 
 @Entity
-public class Product {
+@Table(name="status")
+public class OrderStatus {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	
-	private String name;
+	private EStatus status;
 	
-	private Integer stock;
-	
-	private double price;
-	
-	public Product(String name, Integer stock, double price) {
-		this.name = name;
-		this.stock = stock;
-		this.price = price;
+	public OrderStatus(EStatus status) {
+		
+		this.status = status;
 	}
 }

@@ -22,10 +22,13 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
 import io.github.isan95.accenturetest.entity.ERole;
+import io.github.isan95.accenturetest.entity.EStatus;
+import io.github.isan95.accenturetest.entity.OrderStatus;
 import io.github.isan95.accenturetest.entity.Product;
 import io.github.isan95.accenturetest.entity.Role;
 import io.github.isan95.accenturetest.entity.UserApp;
 import io.github.isan95.accenturetest.repository.UserRepository;
+import io.github.isan95.accenturetest.repository.OrderStatusRepository;
 import io.github.isan95.accenturetest.repository.ProductRepository;
 import io.github.isan95.accenturetest.repository.RoleRepository;
 
@@ -41,6 +44,8 @@ public class AccenturetestApplication {
 	@Autowired
 	private PasswordEncoder encoder;
 	
+	@Autowired
+	private OrderStatusRepository orderStatusRepository; 
 
 	@PostConstruct
 	private void initData() {
@@ -55,11 +60,20 @@ public class AccenturetestApplication {
 		repository.saveAll(users);
 		
 		List<Product> products = Stream.of(
-				new Product(1L,"Product 1", 50, 2000.0),
-				new Product(2L,"Product 2", 10, 3000.0),
-				new Product(3L,"Product 3", 80, 2500.0)
+				new Product("Product 1", 50, 2000.0),
+				new Product("Product 2", 10, 3000.0),
+				new Product("Product 3", 80, 2500.0)
 				).collect(Collectors.toList());
+		
 		productRepository.saveAll(products);
+		
+		List<OrderStatus> status = Stream.of(
+				new OrderStatus(EStatus.STATUS_PENDING),
+				new OrderStatus(EStatus.STATUS_CANCELED),
+				new OrderStatus(EStatus.STATUS_FINISHED)
+				).collect(Collectors.toList());
+		
+		orderStatusRepository.saveAll(status);
 	}
 
 	public static void main(String[] args) {
