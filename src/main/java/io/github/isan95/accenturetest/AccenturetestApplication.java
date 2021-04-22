@@ -22,9 +22,11 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
 import io.github.isan95.accenturetest.entity.ERole;
+import io.github.isan95.accenturetest.entity.Product;
 import io.github.isan95.accenturetest.entity.Role;
 import io.github.isan95.accenturetest.entity.UserApp;
 import io.github.isan95.accenturetest.repository.UserRepository;
+import io.github.isan95.accenturetest.repository.ProductRepository;
 import io.github.isan95.accenturetest.repository.RoleRepository;
 
 @SpringBootApplication
@@ -34,10 +36,11 @@ public class AccenturetestApplication {
 	private UserRepository repository;
 	
 	@Autowired
-	private PasswordEncoder encoder;
+	private ProductRepository productRepository;
 	
 	@Autowired
-	private RoleRepository roleRepository;
+	private PasswordEncoder encoder;
+	
 
 	@PostConstruct
 	private void initData() {
@@ -50,8 +53,13 @@ public class AccenturetestApplication {
 				).collect(Collectors.toList());
 		
 		repository.saveAll(users);
-
-
+		
+		List<Product> products = Stream.of(
+				new Product(1L,"Product 1", 50, 2000.0),
+				new Product(2L,"Product 2", 10, 3000.0),
+				new Product(3L,"Product 3", 80, 2500.0)
+				).collect(Collectors.toList());
+		productRepository.saveAll(products);
 	}
 
 	public static void main(String[] args) {

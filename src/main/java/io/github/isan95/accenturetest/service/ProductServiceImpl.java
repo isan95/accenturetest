@@ -3,10 +3,13 @@ package io.github.isan95.accenturetest.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import io.github.isan95.accenture.exception.ResourceNotFoundException;
 import io.github.isan95.accenturetest.entity.Product;
 import io.github.isan95.accenturetest.repository.ProductRepository;
 
+@Service
 public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
@@ -21,7 +24,7 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public Product getProduct(long id) {
 		
-		return productRepository.findById(id).get();
+		return productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Producto no encontrado"));
 	}
 
 	@Override
