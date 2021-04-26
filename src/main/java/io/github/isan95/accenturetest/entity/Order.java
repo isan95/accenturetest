@@ -58,8 +58,8 @@ public class Order implements Serializable{
 	private  OrderStatus status;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "pk.order")
-	//@Valid
+	@OneToMany(mappedBy = "pk.order", cascade = CascadeType.ALL)
+	@Valid
 	private List<OrderProduct> orderProducts = new ArrayList<>();
 	
 	private final double ivaPercent = 19.0/100.0;

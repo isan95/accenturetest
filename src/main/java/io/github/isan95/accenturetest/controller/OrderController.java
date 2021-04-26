@@ -1,5 +1,6 @@
 package io.github.isan95.accenturetest.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -99,6 +101,31 @@ public class OrderController {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(new MessageResponse("Error: Se ha encontrado una incosistencia en la nueva orden"));
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasRole('CUSTOMER')")
+	public ResponseEntity<?> deleteOrder(@PathVariable long id){
+		Order order = orderService.findOrderById(id);
+		if(orderService.equalsUser(order)) {
+			order.setDateCreated(LocalDateTime.parse("2018-02-27T18:14:01.184"));
+			 if (orderService.isDeleteTime(order)) {
+				 orderService.delete(order);
+				 productService.getAllProducts().forEach(i->{
+					 System.out.println(i);
+				 });;
+				 
+				 return ResponseEntity.ok(new MessageResponse("Orden eliminada con exito"));
+			 }
+			 else {
+				 order.setDateCreated(LocalDateTime.parse("2018-02-27T18:14:01.184"));
+				 orderService.deleteOrderAfterTime(order);
+				 return ResponseEntity.ok(new MessageResponse("Orden eliminada con exito, con 10% de penalizacion"));
+			 }	 
+		}
+				
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(new MessageResponse("Error: No tiene autorizacion para eliminar esta orden"));
 	}
 	
 }

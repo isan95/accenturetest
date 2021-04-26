@@ -18,6 +18,8 @@ public interface OrderService {
     
     void delete(Order order);
     
+    void deleteOrderAfterTime(Order order);
+    
     Order updateOrder(Order order);
     
     void settingOrder(Order order, List<OrderProduct>  orderProduct);
@@ -25,6 +27,8 @@ public interface OrderService {
     List<OrderProduct>  convertOrderRequestToOrderProduct (List<OrderRequest> listProduct, Order order);
     
     boolean isUpdateTime(Order order);
+    
+    boolean isDeleteTime(Order order);
     
     boolean equalsUser (Order order);
     

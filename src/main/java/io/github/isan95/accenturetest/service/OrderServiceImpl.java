@@ -25,7 +25,9 @@ import io.github.isan95.accenturetest.repository.ProductRepository;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 	
-	private final static long HOURSTOUPDATE = 5; 
+	private final static long HOURSTOUPDATE = 5;
+	
+	private final static long HOURSTODELETE = 12;
 
 	@Autowired
 	private OrderRepository orderRepository;
@@ -145,6 +147,26 @@ public class OrderServiceImpl implements OrderService {
 		double subtotalNew = order.getSubTotalOrderPrice();
 		
 		return subtotalNew >= subtotalOld;
+	}
+
+	@Override
+	public boolean isDeleteTime(Order order) {
+		
+		return hoursAgo(order) <= HOURSTODELETE;
+	}
+
+	@Override
+	public void deleteOrderAfterTime(Order order) {
+		double PercentOrder10 = order.getSubTotalOrderPrice()*10/100;
+		order.setIva(0);
+		order.setOrderProducts(null);
+		order.setShipping(0);
+		order.setStatus(orderStatusRepository.findById(3).orElseThrow(()->
+	    new ResourceNotFoundException("Error: Estado no encontrado")) );
+		order.setSubtotal(PercentOrder10);
+		order.setTotal(PercentOrder10);
+		orderRepository.save(order);
+		
 	}
 
 }
