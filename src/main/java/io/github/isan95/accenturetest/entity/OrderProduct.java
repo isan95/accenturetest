@@ -1,6 +1,5 @@
 package io.github.isan95.accenturetest.entity;
 
-
 import java.io.Serializable;
 import java.util.Set;
 
@@ -16,6 +15,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.github.isan95.accenture.exception.NotStockException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 @Entity
-public class OrderProduct implements Serializable{
+public class OrderProduct implements Serializable {
 
 	/**
 	 * 
@@ -45,7 +45,13 @@ public class OrderProduct implements Serializable{
 		pk = new OrderProductPK();
 		pk.setOrder(order);
 		pk.setProduct(product);
-		this.quantity = quantity;
+		
+		if(quantity <= product.getStock()) {
+			this.quantity = quantity;	
+		}
+		else {
+			throw new NotStockException("La cantidad es superior a las existencias");
+		}
 	}
 
 	@Transient
