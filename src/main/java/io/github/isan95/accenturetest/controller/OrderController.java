@@ -108,7 +108,6 @@ public class OrderController {
 	public ResponseEntity<?> deleteOrder(@PathVariable long id){
 		Order order = orderService.findOrderById(id);
 		if(orderService.equalsUser(order)) {
-			order.setDateCreated(LocalDateTime.parse("2018-02-27T18:14:01.184"));
 			 if (orderService.isDeleteTime(order)) {
 				 orderService.delete(order);
 				 productService.getAllProducts().forEach(i->{
@@ -118,7 +117,6 @@ public class OrderController {
 				 return ResponseEntity.ok(new MessageResponse("Orden eliminada con exito"));
 			 }
 			 else {
-				 order.setDateCreated(LocalDateTime.parse("2018-02-27T18:14:01.184"));
 				 orderService.deleteOrderAfterTime(order);
 				 return ResponseEntity.ok(new MessageResponse("Orden eliminada con exito, con 10% de penalizacion"));
 			 }	 
