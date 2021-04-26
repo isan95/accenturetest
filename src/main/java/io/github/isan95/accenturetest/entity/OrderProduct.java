@@ -1,6 +1,7 @@
 package io.github.isan95.accenturetest.entity;
 
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -24,7 +25,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 @Entity
-public class OrderProduct {
+public class OrderProduct implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2553012190125268475L;
 
 	@EmbeddedId
 	@JsonIgnore

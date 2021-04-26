@@ -1,5 +1,6 @@
 package io.github.isan95.accenturetest.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,8 +32,13 @@ import lombok.NoArgsConstructor;
 @Table(uniqueConstraints = {
 		@UniqueConstraint(columnNames = "username")
 })
-public class UserApp {
+public class UserApp implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1014794390732600538L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

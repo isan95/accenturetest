@@ -1,5 +1,6 @@
 package io.github.isan95.accenturetest.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -37,7 +39,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3494422565526433810L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,14 +59,14 @@ public class Order {
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "pk.order")
-	@Valid
+	//@Valid
 	private List<OrderProduct> orderProducts = new ArrayList<>();
 	
 	private final double ivaPercent = 19.0/100.0;
 	
 	private double iva;
 	
-	private final double shipping = 8000.0;
+	private double shipping = 8000.0;
 	
 	@JsonManagedReference
 	@ManyToOne
@@ -67,13 +74,14 @@ public class Order {
 	private UserApp user;
 	
 	
-	
+	@Transient
 	public Double getSubTotalOrderPrice() {
-		 subtotal = 0D;
+		 double subtotal = 0D;
 		List<OrderProduct> orderProducts = getOrderProducts();
 		for (OrderProduct op : orderProducts) {
 			subtotal += op.getTotalPrice();
 		}
+		this.setSubtotal(subtotal);
 		return subtotal;
 	}
 	
@@ -85,5 +93,5 @@ public class Order {
 	public int getNumberOfProducts() {
 		return this.orderProducts.size();
 	}
-
+	
 }

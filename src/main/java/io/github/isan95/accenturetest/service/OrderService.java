@@ -23,4 +23,10 @@ public interface OrderService {
     void settingOrder(Order order, List<OrderProduct>  orderProduct);
     
     List<OrderProduct>  convertOrderRequestToOrderProduct (List<OrderRequest> listProduct, Order order);
+    
+    boolean isUpdateTime(Order order);
+    
+    boolean equalsUser (Order order);
+    
+    boolean isEqualOrGreaterTotal(Order order, List<OrderRequest> productList);
 }

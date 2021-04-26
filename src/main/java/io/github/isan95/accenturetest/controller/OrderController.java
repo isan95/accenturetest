@@ -72,7 +72,7 @@ public class OrderController {
 			return new ResponseEntity<>(order, HttpStatus.CREATED);
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new MessageResponse("Erro: Compra por menos de $70.000"));
+					.body(new MessageResponse("Error: Compra por menos de $70.000"));
 		}
 
 	}
@@ -82,16 +82,23 @@ public class OrderController {
 	public ResponseEntity<?> updateOrder(@RequestBody List<OrderRequest> productList, @PathVariable Long idOrder) {
 
 		Order order = orderService.findOrderById(idOrder);
-
-		List<OrderProduct> orderProducts = orderService.convertOrderRequestToOrderProduct(productList, order);
-
-		orderService.settingOrder(order, orderProducts);
-
-		if (orderService.updateOrder(order) != null) {
-			return new ResponseEntity<>(order, HttpStatus.CREATED);
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new MessageResponse("Erro: Compra por menos de $70.000"));
-		}
+		double subtotalOld = order.getSubTotalOrderPrice();
+		if(orderService.equalsUser(order) && orderService.isUpdateTime(order)) {
+			
+			List<OrderProduct> orderProducts =orderService.convertOrderRequestToOrderProduct(productList, order);
+			
+			order.setOrderProducts(orderProducts);			
+			
+			if(subtotalOld <= order.getSubTotalOrderPrice()) {
+				orderService.updateOrder(order);
+				return new ResponseEntity<>(order, HttpStatus.OK);
+			}
+			
+			
+		}	
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(new MessageResponse("Error: Se ha encontrado una incosistencia en la nueva orden"));
 	}
+	
 }

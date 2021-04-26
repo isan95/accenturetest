@@ -1,5 +1,7 @@
 package io.github.isan95.accenturetest.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import io.github.isan95.accenture.exception.ResourceNotFoundException;
 import io.github.isan95.accenturetest.entity.Order;
 import io.github.isan95.accenturetest.entity.OrderProduct;
 import io.github.isan95.accenturetest.entity.Product;
+import io.github.isan95.accenturetest.filter.UserSesion;
 import io.github.isan95.accenturetest.payload.request.OrderRequest;
 import io.github.isan95.accenturetest.repository.OrderProductRepository;
 import io.github.isan95.accenturetest.repository.OrderRepository;
@@ -21,6 +24,8 @@ import io.github.isan95.accenturetest.repository.ProductRepository;
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
+	
+	private final static long HOURSTOUPDATE = 5; 
 
 	@Autowired
 	private OrderRepository orderRepository;
@@ -60,15 +65,16 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Order updateOrder(Order order) {
-		if (order.getSubtotal() > 70000) {
-			order.setIva(order.getSubtotal() * order.getIvaPercent());
-			order.setTotal(order.getSubtotal() + order.getIva() + order.getShipping());
+		if (order.getSubTotalOrderPrice() > 70000) {
+			order.setIva(order.getSubTotalOrderPrice() * order.getIvaPercent());
+			order.setTotal(order.getSubTotalOrderPrice() + order.getIva() + order.getShipping());
 			this.update(order);
 			return order;
 		}
 		if(order.getSubtotal()>100000) {
 			order.setIva(order.getSubtotal() * order.getIvaPercent());
 			order.setTotal(order.getSubtotal() + order.getIva());
+			order.setShipping(0);
 			this.update(order);
 			return order;
 		}
@@ -104,6 +110,41 @@ public class OrderServiceImpl implements OrderService {
 	    	orderProducts.add(orderProductRepository.save(orderProduct));
 	    }
 	    return orderProducts;
+	}
+
+	@Override
+	public boolean isUpdateTime(Order order) {
+		
+		return  hoursAgo(order)<=HOURSTOUPDATE;
+	}
+	
+	private long hoursAgo(Order order) {
+		
+		Long secondsAgo = Duration.between(order.getDateCreated(), LocalDateTime.now()).getSeconds();
+		
+		return secondToHours(secondsAgo);
+	}
+	
+	private long secondToHours(Long seconds) {
+		
+		return seconds/3600;
+	}
+
+	@Override
+	public boolean equalsUser(Order order) {
+		
+		return order.getUser().getUsername().equals(UserSesion.getCurrentUsername());
+	}
+
+	@Override
+	public boolean isEqualOrGreaterTotal(Order order, List<OrderRequest> productList) {
+		double subtotalOld = order.getSubTotalOrderPrice();
+		List<OrderProduct> listProduct = convertOrderRequestToOrderProduct(productList, order);
+		order.setOrderProducts(listProduct);
+		
+		double subtotalNew = order.getSubTotalOrderPrice();
+		
+		return subtotalNew >= subtotalOld;
 	}
 
 }
