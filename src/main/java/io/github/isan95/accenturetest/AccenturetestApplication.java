@@ -1,10 +1,6 @@
 package io.github.isan95.accenturetest;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,13 +9,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
 import io.github.isan95.accenturetest.entity.ERole;
 import io.github.isan95.accenturetest.entity.EStatus;
@@ -30,7 +20,6 @@ import io.github.isan95.accenturetest.entity.UserApp;
 import io.github.isan95.accenturetest.repository.UserRepository;
 import io.github.isan95.accenturetest.repository.OrderStatusRepository;
 import io.github.isan95.accenturetest.repository.ProductRepository;
-import io.github.isan95.accenturetest.repository.RoleRepository;
 
 @SpringBootApplication
 public class AccenturetestApplication {

@@ -18,7 +18,6 @@ import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.github.isan95.accenturetest.entity.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

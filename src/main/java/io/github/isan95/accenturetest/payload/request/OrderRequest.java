@@ -1,6 +1,5 @@
 package io.github.isan95.accenturetest.payload.request;
 
-import java.util.HashMap;
 
 import lombok.Data;
 

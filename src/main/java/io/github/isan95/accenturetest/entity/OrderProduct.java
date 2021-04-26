@@ -1,16 +1,10 @@
 package io.github.isan95.accenturetest.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -47,7 +41,8 @@ public class OrderProduct implements Serializable {
 		pk.setProduct(product);
 		
 		if(quantity <= product.getStock()) {
-			this.quantity = quantity;	
+			this.quantity = quantity;
+			product.setStock(product.getStock()-this.quantity);
 		}
 		else {
 			throw new NotStockException("La cantidad es superior a las existencias");

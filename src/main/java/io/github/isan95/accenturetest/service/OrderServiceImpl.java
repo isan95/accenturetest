@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import io.github.isan95.accenture.exception.ResourceNotFoundException;
 import io.github.isan95.accenturetest.entity.Order;
 import io.github.isan95.accenturetest.entity.OrderProduct;
-import io.github.isan95.accenturetest.entity.Product;
 import io.github.isan95.accenturetest.filter.UserSesion;
 import io.github.isan95.accenturetest.payload.request.OrderRequest;
 import io.github.isan95.accenturetest.repository.OrderProductRepository;
@@ -67,16 +66,16 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Order updateOrder(Order order) {
-		if (order.getSubTotalOrderPrice() > 70000) {
+		if (order.getSubTotalOrderPrice() > 70000 && order.getSubTotalOrderPrice() <= 100000) {
 			order.setIva(order.getSubTotalOrderPrice() * order.getIvaPercent());
 			order.setTotal(order.getSubTotalOrderPrice() + order.getIva() + order.getShipping());
 			this.update(order);
 			return order;
 		}
-		if(order.getSubtotal()>100000) {
-			order.setIva(order.getSubtotal() * order.getIvaPercent());
-			order.setTotal(order.getSubtotal() + order.getIva());
+		if(order.getSubTotalOrderPrice()>100000) {
+			order.setIva(order.getSubTotalOrderPrice() * order.getIvaPercent());
 			order.setShipping(0);
+			order.setTotal(order.getSubTotalOrderPrice() + order.getIva());
 			this.update(order);
 			return order;
 		}

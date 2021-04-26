@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import io.github.isan95.accenturetest.entity.ERole;
 import io.github.isan95.accenturetest.entity.Role;
 
 import lombok.AllArgsConstructor;
